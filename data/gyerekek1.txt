@@ -1,0 +1,4 @@
+gyerek,kedvenc.szin
+Tibike,türkizkék
+Pannika,piros
+Zolika,zöld

@@ -1,0 +1,4 @@
+gyerek,kedvenc.jatek
+Tibike,tégla
+Pannika,papírtigris
+Sárika,selyemhernyó
