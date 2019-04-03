@@ -31,11 +31,24 @@ iris %>%  # kedvenc virágméret adathalmazunk
 
   # https://en.wikipedia.org/wiki/Harmonic_mean#/media/File:MathematicalMeans.svg
 
+# fuggvenyNeve()
+# valtozo.neve
+# valtozo_neve
+# harmonicMean()
+# harmonic.mean
+
 harmonicMean = function(some.numbers){
   h.mean = 1 / mean( 1 / some.numbers )
   return(h.mean)
 }
 
+# szerencsetlen nevek:
+# rebrusPeter = function(torkenczy.miklos){
+#   siptar.peter = 1 / mean ( 1 / torkenczy.miklos)
+#   return(torkenczy.miklos)
+# }
+
+mean(szamok)
 harmonicMean(szamok)
 
 # a függvény részei: név (harmonicMean). argumentumok (some.numbers). test (a {} közötti rész)
@@ -77,6 +90,15 @@ iris.h.means = iris.long %>%
 iris.h.means %>% 
   spread(key, h.mean)
 
+iris %>%
+  group_by(Species) %>% 
+  summarise(
+    h.mean.Petal.Length = harmonicMean(Petal.Length),
+    h.mean.Petal.Width = harmonicMean(Petal.Width),
+    h.mean.Sepal.Length = harmonicMean(Sepal.Length),
+    h.mean.Sepal.Width = harmonicMean(Sepal.Width)
+  )
+
 # röviden, tömören
 
 iris %>% 
@@ -113,5 +135,63 @@ spread(d1, key, h.mean)
 
 # itt a formula segitsegnek:
 geometric.mean.x = exp(mean(log(x)))
-# szamold ki a PlantGrowth datasetben a sulyok geometric mean-jet csoportonkent.
-PlantGrowth
+# a cel:
+
+szamok %>% log %>% mean %>% exp
+
+geometricMean = function(x){
+  g.mean = exp(mean(log(x)))
+  return(g.mean)
+}
+  
+geometricMean(szamok)
+
+###################################
+# random számok jönnek, rakjunk be egy seed-et
+set.seed(438478)
+# dobáljuk a kockát!
+kocka = c(1,2,3,4,5,6)
+# ez ugyanaz mint
+kocka = 1:6
+
+kiskocka1 = sample(kocka, size = 10, replace = T)
+kiskocka2 = sample(kocka, size = 10, replace = T)
+mean(nagykocka1 + nagykocka2)
+# hát ez nem nagyon hét
+gigakocka1 = sample(kocka, size = 10^6, replace = T)
+gigakocka2 = sample(kocka, size = 10^6, replace = T)
+mean(sum(gigakocka1)+sum(gigakocka2))
+# ez már majdnem hét
+
+# a sample bármivel működik
+péz = c('fej', 'írás')
+kisdobás = sample(péz, size = 10, replace = T)
+# hányszor fej
+fejek = kisdobás[kisdobás == 'fej'] %>% length
+# hányszor dobtuk föl összesen
+összes = kisdobás %>% length
+# fejek aránya
+fejek/összes
+# hát ez nagyon nem 0.5
+
+kisdobás = sample(péz, size = 10^6, replace = T)
+# hányszor fej
+fejek = kisdobás[kisdobás == 'fej'] %>% length
+# hányszor dobtuk föl összesen
+összes = kisdobás %>% length
+# fejek aránya
+arány = fejek/összes
+arány
+# ez már elég jó
+
+########################
+# házi feladat!
+
+# csinálj egy függvényt, ami pénzt dobál. a végén kiírja, hogy mi volt a fejek aránya (ez fent a fejek/összes). az argumentuma az, hányszor dobjuk föl a pénzt.
+# valami ilyen lesz:
+
+tossCoin(number.of.tosses)
+# és így kell használni
+tossCoin(10)
+tossCoin(100)
+tossCoin(5760000000)
