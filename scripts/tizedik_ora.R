@@ -7,12 +7,14 @@
 
 # Imagine we have this simple tibble:
 
-df <- tibble(
+df = tibble(
   a = rnorm(10),
   b = rnorm(10),
   c = rnorm(10),
   d = rnorm(10)
 )
+
+View(df)
 
 # We want to compute the median of each column. You could do with copy-and-paste:
 
@@ -24,6 +26,15 @@ median(df$c)
 #> [1] -0.0567
 median(df$d)
 #> [1] 0.144
+
+df %>% 
+  gather(key, value) %>% 
+  group_by(key) %>% 
+  summarise(
+    median = median(value)
+  )
+
+
 
 # But that breaks our rule of thumb: never copy and paste more than twice. Instead, we could use a for loop:
 
@@ -44,7 +55,15 @@ hMean = function(x){
   return(h.mean.x)
 }
 
+hMean(df$a)
+
 map(df, hMean)
+
+map_dbl(df, median)
+
+#
+apply()
+
 
 # most eztet:
 
