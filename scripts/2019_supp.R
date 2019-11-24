@@ -19,7 +19,9 @@ lt = read_csv('~/Downloads/dolog.txt')
 
 lt = lt %>% select(-SD,-Mean)
 lt
-e1 = lt %>% filter(Experiment==1)
-e2 = lt %>% filter(Experiment==2)
+lt$Experiment = paste('e', lt$Experiment, sep = '')
+
+e1 = lt %>% filter(Experiment=='e1')
+e2 = lt %>% filter(Experiment=='e2')
 write_csv(e1, 'data/lt_e1.txt')
 write_csv(e2, 'data/lt_e2.txt')

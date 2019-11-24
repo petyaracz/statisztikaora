@@ -9,19 +9,19 @@ av_data = read_csv('https://raw.githubusercontent.com/petyaracz/statisztikaora/m
 View(av_subjects)
 View(av_data)
 
-# 1.2 We need to pair up subject profession and subject response times
+# 1.1 We need to pair up subject profession and subject response times
 
 av = left_join(av_subjects, av_data, by = 'Subject')
 
 av
 
-# 1.3 This dataset is WIDE. One participant per line. We need to make it LONG. One observation per line.
+# 1.2 This dataset is WIDE. One participant per line. We need to make it LONG. One observation per line.
 
 av_long = pivot_longer(av, - c(Subject, Group), names_to = 'Condition', values_to = 'RT')
 
 av_long
 
-# 1.4 What do the distributions of RT-s look like? Do we need to logtransform them?
+# 1.3 What do the distributions of RT-s look like? Do we need to logtransform them?
 
 hist(av_long$RT)
 
@@ -69,4 +69,23 @@ ggplot(av, aes(x = auditory, y = visual, colour = Group)) +
 
 # 3. Now it's your turn!!!
 
+e1 = read_csv('https://raw.githubusercontent.com/petyaracz/statisztikaora/master/data/lt_e1.txt')
+e2 = read_csv('https://raw.githubusercontent.com/petyaracz/statisztikaora/master/data/lt_e2.txt')
+
+# 3.1 Combine the two datasets (tip: use rbind() )
+# 3.2 Make the dataset LONG.
+# 3.3 Log looking times.
+# 3.4
+
+lt = rbind(e1,e2)
+
+lt_long = pivot_longer(lt, -c(Experiment, Condition), names_to = 'Participant', values_to = 'LT')
+
+lt_long$log.LT = log(lt_long$LT)
+
+hist(lt_long$LT)
+hist(lt_long$log.LT)
+
+ggplot(lt_long, aes(x = Experiment, y = log.LT)) + 
+  geom_boxplot()
 
