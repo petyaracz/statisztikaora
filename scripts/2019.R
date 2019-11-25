@@ -17,6 +17,12 @@ av = left_join(av_subjects, av_data, by = 'Subject')
 
 av
 
+av2 = cbind(av_subjects, av_data)
+
+av2 = av2[,2:5]
+av2
+av
+
 # 1.2 This dataset is WIDE. One participant per line. We need to make it LONG. One observation per line.
 
 av_long = pivot_longer(av, - c(Subject, Group), names_to = 'Condition', values_to = 'RT')
@@ -71,6 +77,32 @@ ggplot(av, aes(x = auditory, y = visual, colour = Group)) +
   geom_point() +
   geom_smooth(method = 'lm')
 
+# 2.8 Having fun: a publication quality means + se plot
+
+av_long_grouped = group_by(av_long, Group, Condition)
+av_long_grouped = mutate(av_long_grouped,
+  n = n(),
+  mean.RT = mean(log.RT),
+  sd.RT = sd(log.RT),
+  se.RT = sd.RT / sqrt(n)
+  )
+
+av_long_grouped
+
+ggplot(av_long_grouped, aes(x = Condition, y = mean.RT, colour = Group)) + 
+  geom_point(position = position_dodge(0.5)) +
+  geom_errorbar(aes(ymax = mean.RT + se.RT, ymin = mean.RT - se.RT), position = position_dodge(0.5)) +
+  theme_light() +
+  theme(
+    axis.ticks.x=element_blank(),
+    axis.title.x=element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    axis.text.x = element_text(angle=45, vjust=0.5)) +
+  scale_colour_brewer(palette = 'Set2') +
+  ylab('Logged response time') +
+  scale_x_discrete(labels=c("auditory" = "Auditory stimulus", "visual" = "Visual stimulus"))
+  
 ###########################################################################################
 # 3. Now it's your turn!!!
 ###########################################################################################
@@ -154,6 +186,19 @@ stimuli$reveal_location = case_when(
 )
 
 stimuli
+
+stimuli$filename = paste(
+  stimuli$hiding_location,
+  stimuli$hiding_condition,
+  stimuli$reveal_condition,
+  stimuli$reveal_location,
+  '.avi',
+  sep = '_'
+)
+
+set.seed(1234)
+stimuli_random = sample_n(stimuli, 8)
+write_csv(stimuli_random, 's1.txt')
 
 # 4.1 Your turn!
 
